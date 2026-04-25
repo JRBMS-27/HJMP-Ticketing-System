@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard – HJMP Appointment System</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --red:#7B1D1D; --red-dk:#5C1313; --gold:#C9973A; --gold-lt:#E8C97A; --cream:#FAF7F2; --dark:#1A1008; --muted:#6B5B45; --border:#D9C9B0; --sidebar-w: 220px; }
+  body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--dark); display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  aside { width: var(--sidebar-w); background: var(--red-dk); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 10; }
+  .sidebar-logo { padding: 1.5rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .logo-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: var(--red-dk); margin-bottom: 10px; }
+  .logo-text strong { display: block; font-size: 13px; color: #fff; font-weight: 600; }
+  .logo-text span { font-size: 10px; color: rgba(255,255,255,0.55); letter-spacing: 0.08em; text-transform: uppercase; }
+  .sidebar-nav { padding: 1rem 0; flex: 1; }
+  .nav-section { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); padding: 10px 1.25rem 6px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 1.25rem; color: rgba(255,255,255,0.7); font-size: 13px; cursor: pointer; transition: all 0.15s; text-decoration: none; border-left: 3px solid transparent; }
+  .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.08); color: #fff; border-left-color: var(--gold); }
+  .nav-item .icon { width: 16px; text-align: center; font-size: 14px; }
+  .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: rgba(255,255,255,0.4); }
+
+  /* MAIN */
+  .main-wrap { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+  .topbar { background: #fff; border-bottom: 1px solid var(--border); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 5; }
+  .topbar-title { font-size: 15px; font-weight: 600; color: var(--dark); }
+  .topbar-title span { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 8px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .live-badge { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; color: #3A6E12; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #5A8C2E; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.2)} }
+  .btn-new { background: var(--red); color: #fff; border: none; padding: 8px 16px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 2px; text-decoration: none; }
+
+  .content { padding: 2rem; flex: 1; }
+
+  /* STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 2rem; }
+  .stat-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.25rem; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; line-height: 1; }
+  .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+  .stat-card.s-total .stat-num { color: var(--dark); }
+  .stat-card.s-pending .stat-num { color: #8A5E0A; }
+  .stat-card.s-confirmed .stat-num { color: #185FA5; }
+  .stat-card.s-done .stat-num { color: #3A6E12; }
+  .stat-card.s-cancelled .stat-num { color: #7B1D1D; }
+
+  /* FILTERS & SEARCH */
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; }
+  .search-wrap input { width: 100%; border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 9px 34px; font-family: 'Montserrat', sans-serif; font-size: 13px; background: #fff; outline: none; color: var(--dark); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; pointer-events: none; }
+  .filter-tabs { display: flex; gap: 4px; }
+  .filter-tab { padding: 7px 14px; border: 1px solid var(--border); background: #fff; color: var(--muted); font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: all 0.15s; }
+  .filter-tab:hover { border-color: var(--red); color: var(--red); }
+  .filter-tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+  /* TABLE */
+  .table-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .table-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .table-header h2 { font-size: 13px; font-weight: 600; color: var(--dark); }
+  .table-header span { font-size: 12px; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { padding: 10px 16px; text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--cream); border-bottom: 1px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FEF9EF; }
+  td { padding: 12px 16px; vertical-align: middle; }
+  .ticket-id { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; color: var(--red); }
+  .name-cell strong { display: block; font-weight: 600; font-size: 13px; }
+  .name-cell span { font-size: 11px; color: var(--muted); }
+  .service-pill { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 999px; background: #F0E8D8; color: var(--muted); display: inline-block; }
+
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .badge-pending   { background: #FEF3D0; color: #8A5E0A; border: 1px solid #E8C97A; }
+  .badge-confirmed { background: #E0EDFA; color: #1A4D80; border: 1px solid #B5D4F4; }
+  .badge-done      { background: #E8F4DC; color: #2D5E0A; border: 1px solid #C0DD97; }
+  .badge-cancelled { background: #FAECEC; color: #7B1D1D; border: 1px solid #F0A0A0; }
+
+  .action-btn { border: 1px solid var(--border); background: #fff; padding: 5px 10px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500; cursor: pointer; border-radius: 2px; color: var(--muted); margin-right: 4px; transition: all 0.15s; }
+  .action-btn:hover { border-color: var(--red); color: var(--red); }
+  .action-btn.confirm { border-color: #185FA5; color: #185FA5; }
+  .action-btn.confirm:hover { background: #E0EDFA; }
+  .action-btn.done { border-color: #3A6E12; color: #3A6E12; }
+  .action-btn.done:hover { background: #E8F4DC; }
+  .action-btn.cancel { border-color: #A32D2D; color: #A32D2D; }
+  .action-btn.cancel:hover { background: #FAECEC; }
+
+  .empty-row td { text-align: center; padding: 3rem; color: var(--muted); font-size: 13px; }
+
+  /* MODAL */
+  .overlay { position: fixed; inset: 0; background: rgba(26,16,8,0.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 4px; width: 480px; max-width: 95vw; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
+  .modal-head { background: var(--red-dk); padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .modal-head h3 { color: #fff; font-size: 14px; font-weight: 600; }
+  .modal-head .ticket-big { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--gold-lt); }
+  .modal-body { padding: 1.5rem; }
+  .modal-field { margin-bottom: 1rem; }
+  .modal-field label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  .modal-field p { font-size: 14px; color: var(--dark); }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; }
+  .modal-actions { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; }
+  .modal-actions button { flex: 1; padding: 10px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 2px; border: 1px solid; transition: all 0.15s; min-width: 90px; }
+  .close-btn { background: transparent; border: none; color: rgba(255,255,255,0.7); font-size: 20px; cursor: pointer; line-height: 1; }
+  .close-btn:hover { color: #fff; }
+
+  @media (max-width: 900px) {
+    aside { display: none; }
+    .main-wrap { margin-left: 0; }
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="sidebar-logo">
+    <div class="logo-circle">HJMP</div>
+    <div class="logo-text">
+      <strong>HJMP · Malolos</strong>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <p class="nav-section">Main</p>
+    <a class="nav-item active" href="/admin"><span class="icon">◈</span> Dashboard</a>
+    <a class="nav-item" href="/appointment" target="_blank"><span class="icon">+</span> New Appointment</a>
+    <p class="nav-section" style="margin-top:1rem;">Status</p>
+    <a class="nav-item" href="#" onclick="filterByStatus('pending')"><span class="icon">●</span> Pending</a>
+    <a class="nav-item" href="#" onclick="filterByStatus('confirmed')"><span class="icon">●</span> Confirmed</a>
+    <a class="nav-item" href="#" onclick="filterByStatus('done')"><span class="icon">●</span> Done</a>
+    <a class="nav-item" href="#" onclick="filterByStatus('cancelled')"><span class="icon">●</span> Cancelled</a>
+  </nav>
+  <div class="sidebar-footer">HJMP Appointment System v1.0</div>
+</aside>
+
+<div class="main-wrap">
+  <div class="topbar">
+    <div>
+      <span class="topbar-title">Appointment Queue <span id="topbar-date"></span></span>
+    </div>
+    <div class="topbar-right">
+      <div class="live-badge"><div class="live-dot"></div> Live — refreshes every 15s</div>
+      <a class="btn-new" href="/appointment" target="_blank">+ Book Appointment</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-card s-total"><div class="stat-num" id="s-total">–</div><div class="stat-label">Total</div></div>
+      <div class="stat-card s-pending"><div class="stat-num" id="s-pending">–</div><div class="stat-label">Pending</div></div>
+      <div class="stat-card s-confirmed"><div class="stat-num" id="s-confirmed">–</div><div class="stat-label">Confirmed</div></div>
+      <div class="stat-card s-done"><div class="stat-num" id="s-done">–</div><div class="stat-label">Done</div></div>
+      <div class="stat-card s-cancelled"><div class="stat-num" id="s-cancelled">–</div><div class="stat-label">Cancelled</div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search-input" placeholder="Search by name or ticket number..." oninput="fetchTickets()">
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-tab" onclick="setFilter('pending', this)">Pending</button>
+        <button class="filter-tab" onclick="setFilter('confirmed', this)">Confirmed</button>
+        <button class="filter-tab" onclick="setFilter('done', this)">Done</button>
+        <button class="filter-tab" onclick="setFilter('cancelled', this)">Cancelled</button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <h2>Appointment Tickets</h2>
+        <span id="result-count">Loading...</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket #</th>
+            <th>Parishioner</th>
+            <th>Service</th>
+            <th>Preferred Schedule</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ticket-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="modal-overlay">
+  <div class="modal" id="modal-box">
+    <div class="modal-head">
+      <h3 id="m-service">—</h3>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="ticket-big" id="m-ticketnum">—</span>
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="modal-field"><label>Full Name</label><p id="m-name">—</p></div>
+        <div class="modal-field"><label>Contact</label><p id="m-contact">—</p></div>
+        <div class="modal-field"><label>Email</label><p id="m-email">—</p></div>
+        <div class="modal-field"><label>Status</label><p id="m-status">—</p></div>
+        <div class="modal-field"><label>Preferred Date</label><p id="m-date">—</p></div>
+        <div class="modal-field"><label>Preferred Time</label><p id="m-time">—</p></div>
+      </div>
+      <div class="modal-field" id="m-msg-wrap" style="display:none;">
+        <label>Message / Notes</label><p id="m-message" style="font-size:13px;color:var(--muted);line-height:1.6;">—</p>
+      </div>
+      <div class="modal-field">
+        <label>Date Submitted</label><p id="m-created">—</p>
+      </div>
+    </div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<script>
+  let currentFilter = 'all';
+  let currentTicketId = null;
+  let allTickets = [];
+
+  document.getElementById('topbar-date').textContent =
+    '— ' + new Date().toLocaleDateString('en-PH', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  async function fetchStats() {
+    const r = await fetch('/api/stats');
+    const d = await r.json();
+    document.getElementById('s-total').textContent     = d.total;
+    document.getElementById('s-pending').textContent   = d.pending;
+    document.getElementById('s-confirmed').textContent = d.confirmed;
+    document.getElementById('s-done').textContent      = d.done;
+    document.getElementById('s-cancelled').textContent = d.cancelled;
+  }
+
+  async function fetchTickets() {
+    const q = document.getElementById('search-input').value;
+    let url = `/api/tickets?status=${currentFilter}&q=${encodeURIComponent(q)}`;
+    const r = await fetch(url);
+    allTickets = await r.json();
+    renderTable(allTickets);
+  }
+
+  function renderTable(tickets) {
+    const tbody = document.getElementById('ticket-tbody');
+    document.getElementById('result-count').textContent = `${tickets.length} record${tickets.length!==1?'s':''}`;
+    if (!tickets.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No appointments found</td></tr>';
+      return;
+    }
+    tbody.innerHTML = tickets.map(t => `
+      <tr>
+        <td><span class="ticket-id">#${t.ticket_num}</span></td>
+        <td>
+          <div class="name-cell">
+            <strong>${esc(t.full_name)}</strong>
+            <span>${esc(t.contact)}${t.email ? ' · '+esc(t.email) : ''}</span>
+          </div>
+        </td>
+        <td><span class="service-pill">${esc(t.service)}</span></td>
+        <td style="font-size:12px;color:var(--muted);">
+          ${t.pref_date ? t.pref_date : '<span style="opacity:0.5">—</span>'}
+          ${t.pref_time ? '<br>'+t.pref_time : ''}
+        </td>
+        <td><span class="badge badge-${t.status}">${t.status}</span></td>
+        <td style="font-size:12px;color:var(--muted);">${t.created_at.slice(0,10)}</td>
+        <td>
+          <button class="action-btn" onclick="openModal('${t.id}')">View</button>
+          ${t.status==='pending'   ? `<button class="action-btn confirm" onclick="updateStatus('${t.id}','confirmed')">Confirm</button>` : ''}
+          ${t.status==='confirmed' ? `<button class="action-btn done" onclick="updateStatus('${t.id}','done')">Done</button>` : ''}
+          ${t.status!=='cancelled'&&t.status!=='done' ? `<button class="action-btn cancel" onclick="updateStatus('${t.id}','cancelled')">Cancel</button>` : ''}
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    fetchTickets();
+  }
+
+  function filterByStatus(f) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-tab').forEach(b => {
+      b.classList.toggle('active', b.textContent.toLowerCase() === f);
+    });
+    fetchTickets();
+    return false;
+  }
+
+  async function updateStatus(id, status) {
+    await fetch(`/api/tickets/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    fetchStats();
+    fetchTickets();
+    if (currentTicketId === id) closeModal();
+  }
+
+  function openModal(id) {
+    const t = allTickets.find(x => x.id === id);
+    if (!t) return;
+    currentTicketId = id;
+    document.getElementById('m-ticketnum').textContent = '#' + t.ticket_num;
+    document.getElementById('m-service').textContent   = t.service;
+    document.getElementById('m-name').textContent      = t.full_name;
+    document.getElementById('m-contact').textContent   = t.contact;
+    document.getElementById('m-email').textContent     = t.email || '—';
+    document.getElementById('m-status').innerHTML      = `<span class="badge badge-${t.status}">${t.status}</span>`;
+    document.getElementById('m-date').textContent      = t.pref_date || 'No preference';
+    document.getElementById('m-time').textContent      = t.pref_time || 'No preference';
+    document.getElementById('m-created').textContent   = t.created_at;
+    const msgWrap = document.getElementById('m-msg-wrap');
+    if (t.message) { document.getElementById('m-message').textContent = t.message; msgWrap.style.display='block'; }
+    else { msgWrap.style.display='none'; }
+
+    const actions = document.getElementById('modal-actions');
+    let btns = '';
+    if (t.status==='pending')   btns += `<button style="border-color:#185FA5;color:#185FA5;" onclick="updateStatus('${id}','confirmed')">Confirm</button>`;
+    if (t.status==='confirmed') btns += `<button style="border-color:#3A6E12;color:#3A6E12;" onclick="updateStatus('${id}','done')">Mark Done</button>`;
+    if (t.status!=='cancelled'&&t.status!=='done') btns += `<button style="border-color:#A32D2D;color:#A32D2D;" onclick="updateStatus('${id}','cancelled')">Cancel</button>`;
+    btns += `<button style="border-color:var(--border);color:var(--muted);" onclick="closeModal()">Close</button>`;
+    actions.innerHTML = btns;
+
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    currentTicketId = null;
+  }
+
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // initial load + auto-refresh
+  fetchStats();
+  fetchTickets();
+  setInterval(() => { fetchStats(); fetchTickets(); }, 15000);
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointment Confirmed – HJMP Malolos</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --red:#7B1D1D; --red-dk:#5C1313; --gold:#C9973A; --gold-lt:#E8C97A; --cream:#FAF7F2; --dark:#1A1008; --muted:#6B5B45; --border:#D9C9B0; }
+  body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+  nav { background: var(--red-dk); padding: 0 2rem; display: flex; align-items: center; height: 70px; gap: 12px; }
+  .nav-circle { width: 38px; height: 38px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; color: var(--red-dk); }
+  .nav-title { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; }
+
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
+  .container { width: 100%; max-width: 520px; }
+
+  .success-badge { width: 64px; height: 64px; border-radius: 50%; background: #EEF6E8; border: 2px solid #5A8C2E; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+  .success-badge svg { width: 28px; height: 28px; stroke: #3A6E12; stroke-width: 2.5; fill: none; }
+
+  .heading { font-family: 'Great Vibes', cursive; font-size: 2.8rem; text-align: center; color: var(--red); margin-bottom: 6px; }
+  .subheading { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 2rem; }
+
+  .ticket { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .ticket-header { background: var(--red-dk); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .ticket-header-left p { color: rgba(255,255,255,0.65); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .ticket-header-left strong { color: #fff; font-size: 14px; letter-spacing: 0.05em; }
+  .ticket-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 600; color: var(--gold-lt); line-height: 1; }
+
+  .ticket-body { padding: 1.5rem; }
+  .ticket-service { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--red); margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border); }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1.5rem; }
+  .detail-item {}
+  .detail-item .d-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .detail-item .d-val { font-size: 14px; color: var(--dark); font-weight: 500; }
+
+  .ticket-footer { background: var(--cream); border-top: 1px dashed var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
+  .ticket-footer p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .cross-icon { font-size: 20px; color: var(--gold); flex-shrink: 0; }
+
+  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: #FEF3D0; color: #8A5E0A; border: 1px solid #E8C97A; }
+
+  .actions { display: flex; gap: 10px; margin-top: 1.5rem; }
+  .btn { flex: 1; padding: 12px; text-align: center; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 2px; text-decoration: none; display: block; transition: all 0.2s; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+  .btn-outline:hover { border-color: var(--red); color: var(--red); }
+  .btn-solid { background: var(--red); border: 1.5px solid var(--red); color: #fff; }
+  .btn-solid:hover { background: var(--red-dk); }
+
+  footer { background: var(--dark); padding: 1.25rem; text-align: center; }
+  footer p { font-size: 11px; color: rgba(255,255,255,0.35); }
+
+  @media print {
+    nav, .actions, footer { display: none; }
+    body { background: #fff; }
+    .ticket { box-shadow: none; border: 1.5px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-circle">HJMP</div>
+  <span class="nav-title">HJMP · Malolos &nbsp;–&nbsp; Diocese of Malolos</span>
+</nav>
+
+<main>
+  <div class="container">
+    <div class="success-badge">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1 class="heading">Appointment Received</h1>
+    <p class="subheading">Please keep your ticket number. The parish office will contact you to confirm your schedule.</p>
+
+    <div class="ticket">
+      <div class="ticket-header">
+        <div class="ticket-header-left">
+          <p>Hearts of Jesus and Mary Parish</p>
+          <strong>Appointment Ticket</strong>
+        </div>
+        <div class="ticket-num">#{{ ticket.ticket_num }}</div>
+      </div>
+
+      <div class="ticket-body">
+        <p class="ticket-service">{{ ticket.service }}</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <p class="d-label">Full Name</p>
+            <p class="d-val">{{ ticket.full_name }}</p>
+          </div>
+          <div class="detail-item">
+            <p class="d-label">Contact</p>
+            <p class="d-val">{{ ticket.contact }}</p>
+          </div>
+          {% if ticket.pref_date %}
+          <div class="detail-item">
+            <p class="d-label">Preferred Date</p>
+            <p class="d-val">{{ ticket.pref_date }}</p>
+          </div>
+          {% endif %}
+          {% if ticket.pref_time %}
+          <div class="detail-item">
+            <p class="d-label">Preferred Time</p>
+            <p class="d-val">{{ ticket.pref_time }}</p>
+          </div>
+          {% endif %}
+          <div class="detail-item">
+            <p class="d-label">Submitted</p>
+            <p class="d-val">{{ ticket.created_at[:10] }}</p>
+          </div>
+          <div class="detail-item">
+            <p class="d-label">Status</p>
+            <p class="d-val"><span class="status-badge">Pending</span></p>
+          </div>
+        </div>
+        {% if ticket.message %}
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+          <p style="font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px;">Message</p>
+          <p style="font-size: 13px; color: var(--muted);">{{ ticket.message }}</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="ticket-footer">
+        <span class="cross-icon">✦</span>
+        <p>Present this ticket number to the parish office. You may also take a screenshot for reference. &nbsp;|&nbsp; Tel: (044) 791-5901</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="/appointment" class="btn btn-outline">New Appointment</a>
+      <a href="#" onclick="window.print()" class="btn btn-solid">Print / Save</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>© 2025 Hearts of Jesus and Mary Parish · Diocese of Malolos · Kabyawan St., Brgy. Mojon, Malolos, Bulacan 3000</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book an Appointment – HJMP Malolos</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red:    #7B1D1D;
+    --red-dk: #5C1313;
+    --gold:   #C9973A;
+    --gold-lt:#E8C97A;
+    --cream:  #FAF7F2;
+    --dark:   #1A1008;
+    --muted:  #6B5B45;
+    --border: #D9C9B0;
+  }
+
+  body { font-family: 'Montserrat', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--red-dk); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo-circle { width: 44px; height: 44px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; color: var(--red-dk); }
+  .nav-logo-text { color: #fff; }
+  .nav-logo-text strong { display: block; font-size: 14px; font-weight: 600; letter-spacing: 0.05em; }
+  .nav-logo-text span { font-size: 10px; opacity: 0.7; letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold-lt); }
+  .nav-book { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); padding: 8px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Montserrat', sans-serif; text-decoration: none; transition: all 0.2s; }
+  .nav-book:hover { background: var(--gold); color: var(--red-dk); }
+
+  /* HERO BANNER */
+  .hero-banner { background: linear-gradient(135deg, var(--red-dk) 0%, var(--red) 100%); padding: 3rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .hero-banner::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(201,151,58,0.04) 20px, rgba(201,151,58,0.04) 21px); }
+  .hero-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 0.75rem; }
+  .hero-title { font-family: 'Great Vibes', cursive; font-size: clamp(2.5rem, 6vw, 4rem); color: #fff; line-height: 1.1; margin-bottom: 0.5rem; }
+  .hero-subtitle { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: rgba(255,255,255,0.75); letter-spacing: 0.05em; }
+  .hero-divider { width: 60px; height: 1.5px; background: var(--gold); margin: 1rem auto; }
+
+  /* MAIN */
+  main { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem; }
+
+  .form-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 2.5rem; }
+
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--red); margin-bottom: 1.5rem; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .section-title::before { content: '✦'; font-size: 10px; color: var(--gold); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.25rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  label .req { color: var(--red); margin-left: 2px; }
+  input, select, textarea {
+    border: 1px solid var(--border); border-radius: 2px; padding: 10px 14px;
+    font-family: 'Montserrat', sans-serif; font-size: 14px; color: var(--dark);
+    background: var(--cream); outline: none; transition: border 0.2s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--gold); background: #fff; }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 4px; }
+  .service-opt { display: none; }
+  .service-label {
+    display: block; padding: 10px 8px; text-align: center; border: 1px solid var(--border);
+    border-radius: 2px; font-size: 12px; font-weight: 500; color: var(--muted);
+    cursor: pointer; transition: all 0.2s; background: var(--cream); line-height: 1.3;
+  }
+  .service-opt:checked + .service-label {
+    background: var(--red); color: #fff; border-color: var(--red);
+  }
+  .service-label:hover { border-color: var(--red); color: var(--red); }
+
+  .submit-row { margin-top: 2rem; text-align: center; }
+  .btn-submit {
+    background: var(--red); color: #fff; border: none; padding: 14px 48px;
+    font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--red-dk); }
+  .submit-note { font-size: 11px; color: var(--muted); margin-top: 10px; }
+
+  .info-box { background: #FEF9EF; border: 1px solid var(--gold-lt); border-left: 3px solid var(--gold); padding: 14px 16px; margin-bottom: 2rem; border-radius: 2px; }
+  .info-box p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .info-box strong { color: var(--dark); }
+
+  /* FOOTER */
+  footer { background: var(--dark); padding: 2rem; text-align: center; }
+  footer p { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
+
+  @media (max-width: 580px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    nav .nav-links { display: none; }
+    .form-card { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-circle">HJMP</div>
+    <div class="nav-logo-text">
+      <strong>HJMP · Malolos</strong>
+      <span>Diocese of Malolos</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Mass Schedule</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Sacraments</a></li>
+    <li><a href="#" style="color:var(--gold-lt)">Appointment</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <a class="nav-book" href="#">Book Appointment</a>
+</nav>
+
+<div class="hero-banner">
+  <p class="hero-tag">Hearts of Jesus and Mary Parish · Diocese of Malolos</p>
+  <h1 class="hero-title">Book an Appointment</h1>
+  <div class="hero-divider"></div>
+  <p class="hero-subtitle">Kabyawan St., San Felipe Subdivision, Brgy. Mojon, City of Malolos, Bulacan 3000</p>
+</div>
+
+<main>
+  <div class="info-box">
+    <p><strong>Office Hours:</strong> Monday – Saturday, 8:00 AM – 5:00 PM &nbsp;|&nbsp; <strong>Tel:</strong> (044) 791-5901<br>
+    Fill out the form below and our parish office will confirm your appointment. Walk-ins are also welcome during office hours.</p>
+  </div>
+
+  <div class="form-card">
+    <form action="/appointment/submit" method="POST">
+
+      <p class="section-title">Personal Information</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name <span class="req">*</span></label>
+          <input type="text" name="full_name" placeholder="Juan dela Cruz" required>
+        </div>
+        <div class="form-group">
+          <label>Contact Number <span class="req">*</span></label>
+          <input type="tel" name="contact" placeholder="09XX XXX XXXX" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="juan@email.com">
+        </div>
+      </div>
+
+      <p class="section-title" style="margin-top: 1.5rem;">Service Needed <span class="req" style="font-size:12px">*</span></p>
+      <div class="services-grid">
+        <div><input class="service-opt" type="radio" name="service" id="s1" value="Baptism" required><label class="service-label" for="s1">✦ Baptism</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s2" value="Marriage Blessing"><label class="service-label" for="s2">✦ Marriage Blessing</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s3" value="Confirmation"><label class="service-label" for="s3">✦ Confirmation</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s4" value="Death Certificate"><label class="service-label" for="s4">✦ Death Certificate</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s5" value="Certificate Request"><label class="service-label" for="s5">✦ Certificate Request</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s6" value="Counseling"><label class="service-label" for="s6">✦ Counseling</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s7" value="Mass Intention"><label class="service-label" for="s7">✦ Mass Intention</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s8" value="Anointing of the Sick"><label class="service-label" for="s8">✦ Anointing of the Sick</label></div>
+        <div><input class="service-opt" type="radio" name="service" id="s9" value="Other"><label class="service-label" for="s9">✦ Other</label></div>
+      </div>
+
+      <p class="section-title" style="margin-top: 2rem;">Preferred Schedule</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Preferred Date</label>
+          <input type="date" name="pref_date" min="{{ today }}">
+        </div>
+        <div class="form-group">
+          <label>Preferred Time</label>
+          <select name="pref_time">
+            <option value="">No preference</option>
+            <option>8:00 AM</option><option>9:00 AM</option>
+            <option>10:00 AM</option><option>11:00 AM</option>
+            <option>1:00 PM</option><option>2:00 PM</option>
+            <option>3:00 PM</option><option>4:00 PM</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Additional Message / Requirements</label>
+          <textarea name="message" placeholder="Please include any details, requirements, or special requests..."></textarea>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn-submit">Submit Appointment Request</button>
+        <p class="submit-note">You will receive a ticket number upon submission. The parish office will confirm your schedule.</p>
+      </div>
+
+    </form>
+  </div>
+</main>
+
+<footer>
+  <p>© 2025 Hearts of Jesus and Mary Parish · Diocese of Malolos · Bulacan 3000</p>
+</footer>
+
+</body>
+</html>
